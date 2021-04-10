@@ -35,30 +35,32 @@ public class Enemy extends Entity {
 	public void tick() {
 		// Método utilizado pra quando há muitas entities no mapa, assim o movimento
 		// randomico previne que se colidam o tempo todo
-		if (this.isCollidingWithPlayer() == false) {
+		if (this.calculateDistance(this.getX(), this.getY(), Game.player.getX(), Game.player.getY()) < 75) {
+			if (this.isCollidingWithPlayer() == false) {
 //			if (Game.rand.nextInt(100) < 50) {
-			if ((int) x < Game.player.getX() && World.isFree((int) (x + speed), this.getY(), (int) this.z)
-					&& !isColliding((int) (x + speed), this.getY())) {
-				x += speed;
-			} else if ((int) x > Game.player.getX() && World.isFree((int) (x - speed), this.getY(), (int) this.z)
-					&& !isColliding((int) (x - speed), this.getY())) {
-				x -= speed;
-			}
+				if ((int) x < Game.player.getX() && World.isFree((int) (x + speed), this.getY(), (int) this.z)
+						&& !isColliding((int) (x + speed), this.getY())) {
+					x += speed;
+				} else if ((int) x > Game.player.getX() && World.isFree((int) (x - speed), this.getY(), (int) this.z)
+						&& !isColliding((int) (x - speed), this.getY())) {
+					x -= speed;
+				}
 
-			if ((int) y < Game.player.getY() && World.isFree(this.getX(), (int) (y + speed), (int) this.z)
-					&& !isColliding(this.getX(), (int) (y + speed))) {
-				y += speed;
-			} else if ((int) y > Game.player.getY() && World.isFree(this.getX(), (int) (y - speed), (int) this.z)
-					&& !isColliding(this.getX(), (int) (y - speed))) {
-				y -= speed;
-			}
+				if ((int) y < Game.player.getY() && World.isFree(this.getX(), (int) (y + speed), (int) this.z)
+						&& !isColliding(this.getX(), (int) (y + speed))) {
+					y += speed;
+				} else if ((int) y > Game.player.getY() && World.isFree(this.getX(), (int) (y - speed), (int) this.z)
+						&& !isColliding(this.getX(), (int) (y - speed))) {
+					y -= speed;
+				}
 //			}
-		} else {
-			// Existe 10% de chance de causar dano ao jogador
-			if (Game.rand.nextInt(100) < 21) {
+			} else {
+				// Existe 10% de chance de causar dano ao jogador
+				if (Game.rand.nextInt(100) < 21) {
 //				Sound.hurtEffect.play();
-				Game.player.life -= Game.rand.nextInt(3);
-				Game.player.isDamaged = true;
+					Game.player.life -= Game.rand.nextInt(3);
+					Game.player.isDamaged = true;
+				}
 			}
 		}
 
@@ -77,10 +79,10 @@ public class Enemy extends Entity {
 			destroySelf();
 			return;
 		}
-		
-		if(isDamaged) {
+
+		if (isDamaged) {
 			damageCurrent++;
-			if(damageCurrent == damageFrames) {
+			if (damageCurrent == damageFrames) {
 				damageCurrent = 0;
 				isDamaged = false;
 			}

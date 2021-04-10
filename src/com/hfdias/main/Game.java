@@ -4,17 +4,15 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +27,7 @@ import com.hfdias.graficos.Spritesheet;
 import com.hfdias.graficos.UI;
 import com.hfdias.world.World;
 
-public class Game extends Canvas implements Runnable, KeyListener, MouseListener {
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
 	public static JFrame frame;
@@ -67,10 +65,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	public boolean saveGame = false;
 
+	public int mx, my;
+	
 	public Game() {
 		rand = new Random();
 		addKeyListener(this);
 		addMouseListener(this);
+		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		initFrame();
 		// Inicializando objetos
@@ -217,6 +218,12 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			menu.render(g);
 		}
 		/*
+		Graphics2D g2 = (Graphics2D) g;
+		double angleMouse = Math.atan2(200 + 25 - my, 200 + 25 - mx);
+		g2.rotate(angleMouse, 200+25, 200+25);
+		g.setColor(Color.red);
+		g.fillRect(200, 200, 50, 50);
+		
 		g.setFont(newFont);
 		g.setColor(Color.red);
 		g.drawString("Testando", 90, 90);
@@ -359,6 +366,18 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		this.mx = e.getX();
+		this.my = e.getY();
 	}
 
 }
