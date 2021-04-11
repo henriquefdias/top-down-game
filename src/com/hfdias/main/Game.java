@@ -13,10 +13,13 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.hfdias.entities.BulletShoot;
@@ -52,10 +55,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public static Random rand;
 
 	public UI ui;
-	
-	// public InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("pixelfont.ttf");
+
+	// public InputStream stream =
+	// ClassLoader.getSystemClassLoader().getResourceAsStream("pixelfont.ttf");
 	// public Font newFont;
-	
+
 	public static String gameState = "MENU";
 	private boolean showMessageGameOver = true;
 	private int framesGameOver = 0;
@@ -63,10 +67,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	public Menu menu;
 
+	public int[] pixels;
+	public BufferedImage lightmap;
+	public int[] lightMapPixels;
+
 	public boolean saveGame = false;
 
 	public int mx, my;
-	
+
 	public Game() {
 		rand = new Random();
 		addKeyListener(this);
@@ -77,6 +85,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		// Inicializando objetos
 		ui = new UI();
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		try {
+			lightmap = ImageIO.read(getClass().getResource("/lightmap.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		lightMapPixels = new int[lightmap.getWidth() * lightmap.getHeight()];
+		lightmap.getRGB(0, 0, lightmap.getWidth(), lightmap.getHeight(), lightMapPixels, 0, lightmap.getWidth());
+		pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 		entities = new ArrayList<Entity>();
 		enemies = new ArrayList<Enemy>();
 		bullets = new ArrayList<BulletShoot>();
@@ -84,17 +100,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		player = new Player(0, 0, 16, 16, spritesheet.getSprite(32, 0, 16, 16));
 		entities.add(player);
 		world = new World("/level1.png");
-		
+
 		/*
-		try {
-			newFont = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(70f);
-		} catch (FontFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		*/
-		
+		 * try { newFont = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(70f);
+		 * } catch (FontFormatException e) { e.printStackTrace(); } catch (IOException
+		 * e) { e.printStackTrace(); }
+		 */
+
 		menu = new Menu();
 	}
 
@@ -174,6 +186,27 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	}
 
+	/*
+	 * Na função abaixo, ele preenche primeiro os pixels verticalmente, e depois vai
+	 * partindo para o lado.
+	 */
+	/*
+	 * public void drawRectangleExample(int xoff, int yoff) { for (int xx = 0; xx <
+	 * 32; xx++) { for(int yy = 0; yy < 32; yy++) { int xOff = xx + xoff; int yOff =
+	 * yy + yoff; if(xOff < 0 || yOff < 0 || xOff >= WIDTH || yOff >= HEIGHT)
+	 * continue; pixels[xOff + (yOff*WIDTH)] = 0xff0000; } } }
+	 */
+
+	public void applyLight() {
+		for (int xx = 0; xx < Game.WIDTH; xx++) {
+			for (int yy = 0; yy < Game.HEIGHT; yy++) {
+				if(lightMapPixels[xx + (yy * Game.WIDTH)] == 0xffffffff) {
+					pixels[xx + (yy * Game.WIDTH)] = 0;
+				}
+			}
+		}
+	}
+
 	public void render() {
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
@@ -195,10 +228,12 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		for (int i = 0; i < bullets.size(); i++) {
 			bullets.get(i).render(g);
 		}
+		applyLight();
 		ui.render(g);
 		/***/
 		g.dispose();
 		g = bs.getDrawGraphics();
+		// drawRectangleExample(xx, yy);
 		g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
 		g.setFont(new Font("arial", Font.BOLD, 20));
 		g.setColor(Color.white);
@@ -218,16 +253,12 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			menu.render(g);
 		}
 		/*
-		Graphics2D g2 = (Graphics2D) g;
-		double angleMouse = Math.atan2(200 + 25 - my, 200 + 25 - mx);
-		g2.rotate(angleMouse, 200+25, 200+25);
-		g.setColor(Color.red);
-		g.fillRect(200, 200, 50, 50);
-		
-		g.setFont(newFont);
-		g.setColor(Color.red);
-		g.drawString("Testando", 90, 90);
-		*/
+		 * Graphics2D g2 = (Graphics2D) g; double angleMouse = Math.atan2(200 + 25 - my,
+		 * 200 + 25 - mx); g2.rotate(angleMouse, 200+25, 200+25); g.setColor(Color.red);
+		 * g.fillRect(200, 200, 50, 50);
+		 * 
+		 * g.setFont(newFont); g.setColor(Color.red); g.drawString("Testando", 90, 90);
+		 */
 		bs.show();
 	}
 
@@ -371,7 +402,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
