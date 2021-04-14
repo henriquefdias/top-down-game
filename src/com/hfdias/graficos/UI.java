@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-import com.hfdias.entities.Player;
 import com.hfdias.main.Game;
 
 public class UI {

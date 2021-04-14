@@ -1,21 +1,17 @@
 package com.hfdias.entities;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import com.hfdias.main.Game;
-import com.hfdias.main.Sound;
+import com.hfdias.world.AStar;
 import com.hfdias.world.Camera;
+import com.hfdias.world.Vector2i;
 import com.hfdias.world.World;
 
 public class Enemy extends Entity {
-
-	private double speed = 0.45;
-
-	private int maskX = 5, maskY = 8, maskW = 7, maskH = 7;
-
+	
 	private int frames = 0, maxFrames = 6, index = 0, maxIndex = 1;
 
 	private BufferedImage[] sprites;
@@ -35,6 +31,7 @@ public class Enemy extends Entity {
 	public void tick() {
 		// Método utilizado pra quando há muitas entities no mapa, assim o movimento
 		// randomico previne que se colidam o tempo todo
+		/*
 		if (this.calculateDistance(this.getX(), this.getY(), Game.player.getX(), Game.player.getY()) < 75) {
 			if (this.isCollidingWithPlayer() == false) {
 //			if (Game.rand.nextInt(100) < 50) {
@@ -63,7 +60,15 @@ public class Enemy extends Entity {
 				}
 			}
 		}
-
+		*/
+		
+		// Algoritmo A*
+		if(path == null || path.size() == 0) {
+			Vector2i start = new Vector2i((int)(x/16), (int)(y/16));
+			Vector2i end = new Vector2i((int)(Game.player.x/16), (int)(Game.player.y/16));
+			path = AStar.findPath(Game.world, start, end);
+		}
+		followPath(path);
 		frames++;
 		if (frames == maxFrames) {
 			frames = 0;
@@ -110,32 +115,11 @@ public class Enemy extends Entity {
 	}
 
 	public boolean isCollidingWithPlayer() {
-		Rectangle enemyCurrent = new Rectangle(this.getX() + maskX, this.getY() + maskY, maskW, maskH);
+		Rectangle enemyCurrent = new Rectangle(this.getX() + maskx, this.getY() + masky, mwidth, mheight);
 		Rectangle player = new Rectangle(Game.player.getX(), Game.player.getY(), 16, 16);
 
 		if (enemyCurrent.intersects(player) && this.z == Game.player.z) {
 			return true;
-		}
-		return false;
-	}
-
-	// Método mais preciso, porém recomendado para quando há menos entities no mapa,
-	// para nao sobrecarregar por conta de todas as verificações feitas
-	public boolean isColliding(int xnext, int ynext) {
-		Rectangle enemyCurrent = new Rectangle(xnext + maskX, ynext + maskY, maskW, maskH);
-		for (int i = 0; i < Game.enemies.size(); i++) {
-			Enemy e = Game.enemies.get(i);
-			// Aqui valida se está colidindo, logo, se estiver comparando com si mesmo, não
-			// rodar a validação, pois pode causar bug.
-			if (e == this) {
-				continue;
-			}
-			// Pega o enemy atual, que está rodando essa validação, e compara se tem
-			// intersecção com os itens da lista de enemies
-			Rectangle targetEnemy = new Rectangle(e.getX() + maskX, e.getY() + maskY, maskW, maskH);
-			if (enemyCurrent.intersects(targetEnemy)) {
-				return true;
-			}
 		}
 		return false;
 	}
