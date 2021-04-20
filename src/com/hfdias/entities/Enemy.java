@@ -29,6 +29,7 @@ public class Enemy extends Entity {
 	}
 
 	public void tick() {
+		depth = 0;
 		// Método utilizado pra quando há muitas entities no mapa, assim o movimento
 		// randomico previne que se colidam o tempo todo
 		/*
