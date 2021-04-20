@@ -199,7 +199,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	 */
 
 	public void applyLight() {
-		/*
+		
 		for (int xx = 0; xx < Game.WIDTH; xx++) {
 			for (int yy = 0; yy < Game.HEIGHT; yy++) {
 				if(lightMapPixels[xx + (yy * Game.WIDTH)] == 0xffffffff) {
@@ -207,7 +207,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				}
 			}
 		}
-		*/
+		
 	}
 
 	public void render() {
