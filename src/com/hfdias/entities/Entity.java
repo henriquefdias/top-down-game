@@ -31,7 +31,7 @@ public class Entity {
 	protected List<Node> path;
 
 	public int maskx, masky, mwidth, mheight;
-	private double speed = 1;
+	public double speed = 1;
 
 	private BufferedImage sprite;
 
