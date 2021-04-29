@@ -263,8 +263,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		} else if (gameState == "MENU") {
 			menu.render(g);
 		}
-		World.renderMiniMap();
-		g.drawImage(minimapa, 600, 50, World.WIDTH * 5, World.HEIGHT * 5, null);
+		//World.renderMiniMap();
+		//g.drawImage(minimapa, 600, 50, World.WIDTH * 5, World.HEIGHT * 5, null);
 		
 		/*
 		 * Graphics2D g2 = (Graphics2D) g; double angleMouse = Math.atan2(200 + 25 - my,

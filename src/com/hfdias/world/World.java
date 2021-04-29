@@ -24,6 +24,54 @@ public class World {
 	public static final int TILE_SIZE = 16;
 
 	public World(String path) {
+		/*
+		Game.player.setX(0);
+		Game.player.setY(0);
+		WIDTH = 100;
+		HEIGHT = 100;
+		tiles = new Tile[WIDTH*HEIGHT];
+		
+		for (int xx = 0; xx < WIDTH; xx++) {
+			for (int yy = 0; yy < HEIGHT; yy++) {
+				tiles[xx + (yy * WIDTH)] = new WallTile(xx * 16, yy * 16, Tile.TILE_WALL);
+			}
+		}
+		
+		int dir = 0;
+		int xx = 0, yy = 0;
+		
+		for (int i = 0; i < 200; i++) {
+			tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
+			if(dir==0) {
+				//direita
+				if(xx < WIDTH) {
+					xx++;
+				}
+			} else if(dir==1) {
+				//esquerda
+				if(xx > 0) {
+					xx--;
+				}
+			} else if(dir==2) {
+				//baixo
+				if(yy < HEIGHT) {
+					yy++;
+				}
+			} else if(dir==3) {
+				//cima
+				if(yy > 0) {
+					yy--;
+				}
+			}
+			
+			if(Game.rand.nextInt(100) < 30) {
+				dir = Game.rand.nextInt(4);
+			}
+			
+			
+		}
+		*/
+		// Acima está o método de geração aleatoria de mapa
 		try {
 			BufferedImage map = ImageIO.read(getClass().getResource(path));
 			int[] pixels = new int[map.getWidth() * map.getHeight()];
@@ -70,6 +118,7 @@ public class World {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// Método de renderização de mapa via imagem pré desenhada
 	}
 
 	public static boolean isFree(int xNext, int yNext, int zplayer) {
@@ -91,8 +140,8 @@ public class World {
 				|| (tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile))) {
 			return true;
 		}
-		
-		if(zplayer>0) {
+
+		if (zplayer > 0) {
 			return true;
 		}
 		return false;
@@ -127,25 +176,24 @@ public class World {
 			}
 		}
 	}
-	
+
 	public static void renderMiniMap() {
 		for (int i = 0; i < Game.minimapaPixels.length; i++) {
 			Game.minimapaPixels[i] = 0;
 		}
 		for (int xx = 0; xx < WIDTH; xx++) {
 			for (int yy = 0; yy < HEIGHT; yy++) {
-				if(tiles[xx + (yy * WIDTH)] instanceof WallTile) {
+				if (tiles[xx + (yy * WIDTH)] instanceof WallTile) {
 					Game.minimapaPixels[xx + (yy * WIDTH)] = 0xffffff;
 				}
-				
+
 			}
 		}
-		
-		int xPlayer = Game.player.getX()/16;
-		int yPlayer = Game.player.getY()/16;
+
+		int xPlayer = Game.player.getX() / 16;
+		int yPlayer = Game.player.getY() / 16;
 		Game.minimapaPixels[xPlayer + (yPlayer * WIDTH)] = 0x00ffff; // posição player
-		
-		
+
 	}
 
 }
