@@ -88,6 +88,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		addKeyListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		//setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize())); // FULLSCREEN		
 		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		initFrame();
 		// Inicializando objetos
@@ -123,6 +124,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public void initFrame() {
 		frame = new JFrame("Nelda");
 		frame.add(this);
+		// frame.setUndecorated(true); // FULLSCREEN
 		frame.setResizable(false);
 		frame.pack();
 		//Icone da janela
@@ -261,8 +263,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		/***/
 		g.dispose();
 		g = bs.getDrawGraphics();
-		// drawRectangleExample(xx, yy);
 		g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+		// g.drawImage(image, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height, null); // FULLSCREEN
 		g.setFont(new Font("arial", Font.BOLD, 20));
 		g.setColor(Color.white);
 		g.drawString("Ammo : " + player.ammo, 600, 40);
@@ -299,6 +301,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	}
 
 	public void run() {
+		requestFocus();
 		Sound.music.loop();
 		long lastTime = System.nanoTime();
 		double amountOfTicks = 60.0;
@@ -306,7 +309,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		double delta = 0;
 		int frames = 0;
 		double timer = System.currentTimeMillis();
-		requestFocus();
 		while (isRunning) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
