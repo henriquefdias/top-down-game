@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import com.hfdias.main.Game;
+import com.hfdias.main.Sound;
 import com.hfdias.world.AStar;
 import com.hfdias.world.Camera;
 import com.hfdias.world.Vector2i;
@@ -76,6 +77,7 @@ public class Enemy extends Entity {
 			}
 		} else {
 			if (Game.rand.nextInt(100) < 21) {
+				Sound.hurt.play();
 				Game.player.life -= Game.rand.nextInt(3);
 				Game.player.isDamaged = true;
 			}
