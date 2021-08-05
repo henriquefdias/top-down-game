@@ -82,7 +82,7 @@ public class Enemy extends Entity {
 				Game.player.isDamaged = true;
 			}
 		}
-		if(new Random().nextInt(100) < 45)
+		if(new Random().nextInt(100) < 70)
 			followPath(path);
 		if(new Random().nextInt(100) < 5) {
 			Vector2i start = new Vector2i((int)(x/16), (int)(y/16));
