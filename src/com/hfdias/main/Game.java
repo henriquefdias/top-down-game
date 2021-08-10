@@ -70,13 +70,21 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	private int framesGameOver = 0;
 	private boolean restartGame = false;
 
+	// Sistema de cutscene
+	public static int entrada = 1;
+	public static int comecar = 2;
+	public static int jogando = 3;
+	public static int estado_cena = entrada;
+	
+	public int timeCena = 0, maxTimeCena = 60*3;
+
 	public Menu menu;
 
 	public int[] pixels;
 	public BufferedImage lightmap;
 	public int[] lightMapPixels;
 	public static int[] minimapaPixels;
-	
+
 	public static BufferedImage minimapa;
 
 	public boolean saveGame = false;
@@ -88,7 +96,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		addKeyListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		//setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize())); // FULLSCREEN		
+		// setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
+		// // FULLSCREEN
 		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		initFrame();
 		// Inicializando objetos
@@ -111,7 +120,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		world = new World("/level1.png");
 		minimapa = new BufferedImage(World.WIDTH, World.HEIGHT, BufferedImage.TYPE_INT_RGB);
 		minimapaPixels = ((DataBufferInt) minimapa.getRaster().getDataBuffer()).getData();
-		
+
 		/*
 		 * try { newFont = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(70f);
 		 * } catch (FontFormatException e) { e.printStackTrace(); } catch (IOException
@@ -127,7 +136,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		// frame.setUndecorated(true); // FULLSCREEN
 		frame.setResizable(false);
 		frame.pack();
-		//Icone da janela
+		// Icone da janela
 		Image imagem = null;
 		try {
 			imagem = ImageIO.read(getClass().getResource("/icon.png"));
@@ -170,13 +179,28 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				System.out.println("Jogo salvo!");
 			}
 			restartGame = false;
-			for (int i = 0; i < entities.size(); i++) {
-				Entity e = entities.get(i);
-				e.tick();
-			}
+			if (Game.estado_cena == Game.jogando) {
+				for (int i = 0; i < entities.size(); i++) {
+					Entity e = entities.get(i);
+					e.tick();
+				}
 
-			for (int i = 0; i < bullets.size(); i++) {
-				bullets.get(i).tick();
+				for (int i = 0; i < bullets.size(); i++) {
+					bullets.get(i).tick();
+				}
+			} else {
+				if (Game.estado_cena == Game.entrada) {
+					if (player.getX() < 150) {
+						player.x++;
+					} else {
+						Game.estado_cena = Game.comecar;
+					}
+				} else if (Game.estado_cena == Game.comecar) {
+					timeCena++;
+					if(timeCena == maxTimeCena) {
+						Game.estado_cena = Game.jogando;
+					}
+				}
 			}
 
 			if (enemies.size() == 0) {
@@ -226,8 +250,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public void applyLight() {
 		for (int xx = 0; xx < Game.WIDTH; xx++) {
 			for (int yy = 0; yy < Game.HEIGHT; yy++) {
-				if(lightMapPixels[xx + (yy * Game.WIDTH)] == 0xffffffff) {
-					int pixel = Pixel.getLightBlend(pixels[xx+yy*WIDTH], 0x808080, 0);
+				if (lightMapPixels[xx + (yy * Game.WIDTH)] == 0xffffffff) {
+					int pixel = Pixel.getLightBlend(pixels[xx + yy * WIDTH], 0x808080, 0);
 					pixels[xx + (yy * Game.WIDTH)] = pixel;
 				}
 			}
@@ -262,7 +286,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		g.dispose();
 		g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
-		// g.drawImage(image, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height, null); // FULLSCREEN
+		// g.drawImage(image, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width,
+		// Toolkit.getDefaultToolkit().getScreenSize().height, null); // FULLSCREEN
 		g.setFont(new Font("arial", Font.BOLD, 20));
 		g.setColor(Color.white);
 		g.drawString("Ammo : " + player.ammo, 600, 40);
@@ -280,9 +305,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		} else if (gameState == "MENU") {
 			menu.render(g);
 		}
-		//World.renderMiniMap();
-		//g.drawImage(minimapa, 600, 50, World.WIDTH * 5, World.HEIGHT * 5, null);
-		
+		// World.renderMiniMap();
+		// g.drawImage(minimapa, 600, 50, World.WIDTH * 5, World.HEIGHT * 5, null);
+
 		/*
 		 * Graphics2D g2 = (Graphics2D) g; double angleMouse = Math.atan2(200 + 25 - my,
 		 * 200 + 25 - mx); g2.rotate(angleMouse, 200+25, 200+25); g.setColor(Color.red);
@@ -290,6 +315,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		 * 
 		 * g.setFont(newFont); g.setColor(Color.red); g.drawString("Testando", 90, 90);
 		 */
+		
+		if(Game.estado_cena == Game.comecar) {
+			g.drawString("Be ready...", (WIDTH*SCALE)/ 2 - 75, HEIGHT*SCALE / 2 - 75);
+		}
+		
 		bs.show();
 	}
 
