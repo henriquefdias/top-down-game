@@ -30,6 +30,7 @@ import javax.swing.JFrame;
 import com.hfdias.entities.BulletShoot;
 import com.hfdias.entities.Enemy;
 import com.hfdias.entities.Entity;
+import com.hfdias.entities.Npc;
 import com.hfdias.entities.Player;
 import com.hfdias.graficos.Spritesheet;
 import com.hfdias.graficos.UI;
@@ -84,6 +85,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public BufferedImage lightmap;
 	public int[] lightMapPixels;
 	public static int[] minimapaPixels;
+	
+	public Npc npc;
 
 	public static BufferedImage minimapa;
 
@@ -126,6 +129,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		 * } catch (FontFormatException e) { e.printStackTrace(); } catch (IOException
 		 * e) { e.printStackTrace(); }
 		 */
+		
+		npc = new Npc(32,32,16,16,spritesheet.getSprite(0, 32, 16, 16));
+		entities.add(npc);
 
 		menu = new Menu();
 	}
@@ -364,6 +370,10 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			npc.showMessage = false;
+		}
 
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			player.jump = true;
