@@ -121,6 +121,28 @@ public class World {
 		// Método de renderização de mapa via imagem pré desenhada
 	}
 
+	public static boolean isFreeDynamic(int xNext, int yNext, int width, int height) {
+		int x1 = xNext / TILE_SIZE;
+		int y1 = yNext / TILE_SIZE;
+
+		int x2 = (xNext + width - 1) / TILE_SIZE;
+		int y2 = yNext / TILE_SIZE;
+
+		int x3 = xNext / TILE_SIZE;
+		int y3 = (yNext + height - 1) / TILE_SIZE;
+
+		int x4 = (xNext + width - 1) / TILE_SIZE;
+		int y4 = (yNext + height - 1) / TILE_SIZE;
+
+		if (!((tiles[x1 + (y1 * World.WIDTH)] instanceof WallTile)
+				|| (tiles[x2 + (y2 * World.WIDTH)] instanceof WallTile)
+				|| (tiles[x3 + (y3 * World.WIDTH)] instanceof WallTile)
+				|| (tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile))) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static boolean isFree(int xNext, int yNext, int zplayer) {
 		int x1 = xNext / TILE_SIZE;
 		int y1 = yNext / TILE_SIZE;
