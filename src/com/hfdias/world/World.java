@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
@@ -12,6 +13,7 @@ import com.hfdias.entities.Enemy;
 import com.hfdias.entities.Entity;
 import com.hfdias.entities.Flower;
 import com.hfdias.entities.Lifepack;
+import com.hfdias.entities.Particle;
 import com.hfdias.entities.Player;
 import com.hfdias.entities.Weapon;
 import com.hfdias.graficos.Spritesheet;
@@ -216,6 +218,12 @@ public class World {
 		int yPlayer = Game.player.getY() / 16;
 		Game.minimapaPixels[xPlayer + (yPlayer * WIDTH)] = 0x00ffff; // posição player
 
+	}
+	
+	public static void generateParticles(int amount, int x, int y) {
+		for (int i = 0; i < amount; i++) {
+			Game.entities.add(new Particle(x,y,1,1,null));
+		}
 	}
 
 }

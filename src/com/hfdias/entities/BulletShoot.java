@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 
 import com.hfdias.main.Game;
 import com.hfdias.world.Camera;
+import com.hfdias.world.World;
 
 public class BulletShoot extends Entity{
 	
@@ -21,11 +22,19 @@ public class BulletShoot extends Entity{
 	}
 
 	public void tick() {
-		x+=dx * spd;
-		y+=dy * spd;
+		if(World.isFreeDynamic((int)(x+(dx*spd)), (int)(y+(dy*spd)), 3, 3)) {
+			x+=dx * spd;
+			y+=dy * spd;
+		} else {
+			Game.bullets.remove(this);
+			World.generateParticles(100, (int)x, (int)y);
+			System.out.println("Bala removida.");
+			return;
+		}
 		curLife++;
 		if(curLife == life) {
 			Game.bullets.remove(this);
+			World.generateParticles(100, (int)x, (int)y);
 			return;
 		}
 	}
