@@ -63,7 +63,7 @@ public class Enemy extends Entity {
 			}
 		}
 		*/
-		/*
+		
 		// Algoritmo A*
 		maskx = 5;
 		masky = 7;
@@ -89,7 +89,6 @@ public class Enemy extends Entity {
 			Vector2i end = new Vector2i((int)(Game.player.x/16), (int)(Game.player.y/16));
 			path = AStar.findPath(Game.world, start, end);
 		}
-		*/
 		frames++;
 		if (frames == maxFrames) {
 			frames = 0;

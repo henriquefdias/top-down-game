@@ -15,7 +15,7 @@ public class Player extends Entity {
 	public boolean right, up, left, down;
 	public int right_dir = 0, left_dir = 1;
 	public int dir = right_dir;
-	public double speed = 1.8;
+	public double speed = 2;
 
 	private int frames = 0, maxFrames = 5, index = 0, maxIndex = 3;
 	private boolean moved = false;
@@ -62,8 +62,28 @@ public class Player extends Entity {
 			leftPlayer[i] = Game.spritesheet.getSprite(80 - (i * 16), 16, 16, 16);
 		}
 	}
+	
+	public void revealMap() {
+		int xx = (int)(x/16);
+		int yy = (int)(y/16);
+		
+		World.tiles[xx - 1 + yy * World.WIDTH].show = true;
+		World.tiles[xx + yy * World.WIDTH].show = true;
+		World.tiles[xx + 1 + yy * World.WIDTH].show = true;	
+		
+		World.tiles[xx + ((yy + 1) * World.WIDTH)].show = true;
+		World.tiles[xx + ((yy - 1) * World.WIDTH)].show = true;
+		
+		World.tiles[xx - 1 + ((yy + 1) * World.WIDTH)].show = true;
+		World.tiles[xx + 1 + ((yy - 1) * World.WIDTH)].show = true;
+		
+		World.tiles[xx - 1 + ((yy - 1) * World.WIDTH)].show = true;
+		World.tiles[xx + 1 + ((yy + 1) * World.WIDTH)].show = true;
+	}
 
 	public void tick() {
+		
+		revealMap();
 		
 		depth = 1;
 		if (jump) {
